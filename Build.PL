@@ -8,7 +8,9 @@ my $build = Module::Build->new(
         'Test::More' => '0.40',
     },
     requires => {
-        'perl' => '5.8.0',
+        'perl'    => '5.8.0',
+        'autobox' => '2.00',
+        'parent'  => 0,
     },
     meta_add => {
         resources => {

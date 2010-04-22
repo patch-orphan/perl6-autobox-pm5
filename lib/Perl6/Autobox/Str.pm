@@ -1,18 +1,12 @@
-package Perl6::Autobox;
+package Perl6::Autobox::Str;
 
 use 5.008;
 use strict;
 use warnings;
 
-require Perl6::Autobox::Str;
-
-use base 'autobox';
-
 our $VERSION = '0.01';
 
-sub import {
-    shift->SUPER::import(STRING => 'Perl6::Autobox::Str');
-}
+sub chop { substr $_[0], 0, -1 }
 
 1;
 
@@ -20,11 +14,11 @@ __END__
 
 =head1 NAME
 
-Perl6::Autobox - XXX
+Perl6::Autobox::Str - XXX
 
 =head1 VERSION
 
-This document describes Perl6::Autobox version 0.01.
+This document describes Perl6::Autobox::Str version 0.01.
 
 =head1 SYNOPSIS
 
@@ -36,7 +30,7 @@ XXX
 
 =head1 SEE ALSO
 
-L<autobox>, L<autobox::Core>, L<Perl6ish>, L<Moose::Autobox>
+L<Perl6::Autobox>
 
 =head1 AUTHOR
 
