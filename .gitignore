@@ -1,0 +1,8 @@
+*.bak
+*.tar.gz
+.*
+Build
+META.yml
+_build/
+blib/
+!.gitignore

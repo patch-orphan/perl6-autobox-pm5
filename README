@@ -1,0 +1,37 @@
+Perl6::Autobox version 0.01
+===========================
+
+XXX
+
+INSTALLATION
+
+To install this module, type the following:
+
+    perl Build.PL
+    ./Build
+    ./Build test
+    ./Build install
+
+or, to install on Windows:
+
+    perl Build.PL
+    Build
+    Build test
+    Build install
+
+DEPENDENCIES
+
+This module requires these other modules and libraries:
+
+    XXX
+
+DESCRIPTION
+
+XXX
+
+COPYRIGHT AND LICENSE
+
+Copyright 2010 Nick Patch
+
+This library is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.
