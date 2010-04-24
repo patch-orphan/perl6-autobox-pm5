@@ -11,7 +11,9 @@ use base 'autobox';
 our $VERSION = '0.01';
 
 sub import {
-    shift->SUPER::import(STRING => 'Perl6::Autobox::Str');
+    shift->SUPER::import(
+        STRING => 'Perl6::Autobox::Str',
+    );
 }
 
 1;

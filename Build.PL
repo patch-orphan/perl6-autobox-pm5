@@ -3,6 +3,7 @@ use Module::Build;
 my $build = Module::Build->new(
     module_name  => 'Perl6::Autobox',
     license      => 'perl',
+    recursive_test_files => 1,
     build_requires => {
         'ok'         => '0.01',
         'Test::More' => '0.40',

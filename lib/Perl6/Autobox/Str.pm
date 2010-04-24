@@ -28,6 +28,16 @@ This document describes Perl6::Autobox::Str version 0.01.
 
 XXX
 
+=head1 METHODS
+
+=over
+
+=item chop
+
+Returns string with one Char removed from the end.
+
+=back
+
 =head1 SEE ALSO
 
 L<Perl6::Autobox>
