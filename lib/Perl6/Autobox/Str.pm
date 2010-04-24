@@ -8,6 +8,12 @@ our $VERSION = '0.01';
 
 sub chop { substr $_[0], 0, -1 }
 
+sub chomp {
+    my ($str) = @_;
+    $str =~ s{ \n $}{}x;
+    return $str;
+}
+
 1;
 
 __END__
@@ -35,6 +41,10 @@ XXX
 =item chop
 
 Returns string with one Char removed from the end.
+
+=item chomp
+
+Returns string with one newline removed from the end.
 
 =back
 
