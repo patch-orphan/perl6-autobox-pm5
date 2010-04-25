@@ -33,6 +33,8 @@ sub rindex {
     return $strpos == -1 ? undef : $strpos;
 }
 
+sub flip { CORE::reverse $_[0] }
+
 sub trim {
     my $str = shift;
     $str =~ s{^ \s+  }{}xg;
@@ -107,6 +109,10 @@ If the substring is found, then an integer that represents the position of the
 first character of the substring is returned.  If the substring is not found,
 C<undef> is returned.  Do not evaluate as a number, because instead of
 returning -1 it will return 0 and issue a warning.
+
+=item flip
+
+The C<flip> function reverses a string character by character.
 
 =item trim
 
