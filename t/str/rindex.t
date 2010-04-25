@@ -1,68 +1,57 @@
-use v6;
-use Test;
+use strict;
+use warnings;
+use utf8;
+use Perl6::Autobox;
+use Test::More tests => 28;
 
-# L<S32::Str/Str/"=item rindex">
-
-plan 33;
+# L<S32::Str/Str/'=item rindex'>
 
 # Simple - with just a single char
+is 'Hello World'->rindex('H'),  0,      'One char, at beginning';
+is 'Hello World'->rindex('l'),  9,      'One char, in the middle';
+is 'Hello World'->rindex('d'), 10,      'One char, in the end';
+ok !defined 'Hello World'->rindex('x'), 'One char, no match';
 
-is(rindex("Hello World", "H"), 0, "One char, at beginning");
-is(rindex("Hello World", "l"), 9, "One char, in the middle");
-#?rakudo skip 'calling positional params by name'
-is(rindex(:string("fROOH => fRUE: Robotic Ominous Ossified Herald"), "O"), 2, "rindex works with named argument");
-is(rindex("Hello World", "d"), 10, "One char, in the end");
-ok(!defined(rindex("Hello World", "x")), "One char, no match");
-
-is(rindex("Hello World", "l", 10), 9, "One char, first match, pos @ end");
-is(rindex("Hello World", "l", 9), 9, "- 1. match again, pos @ match");
-is(rindex("Hello World", "l", 8), 3, "- 2. match");
-is(rindex("Hello World", "l", 2), 2, "- 3. match");
-ok(!defined(rindex("Hello World", "l", 1)), "- no more matches");
+is 'Hello World'->rindex('l', 10), 9,      'One char, first match, pos @ end';
+is 'Hello World'->rindex('l',  9), 9,      '- 1. match again, pos @ match';
+is 'Hello World'->rindex('l',  8), 3,      '- 2. match';
+is 'Hello World'->rindex('l',  2), 2,      '- 3. match';
+ok !defined 'Hello World'->rindex('l', 1), '- no more matches';
 
 # Simple - with a string
-
-is(rindex("Hello World", "Hello"), 0, "Substr, at beginning");
-is(rindex("Hello World", "o W"), 4, "Substr, in the middle");
-is(rindex("Hello World", "World"), 6, "Substr, at the end");
-ok(!defined(rindex("Hello World", "low")), "Substr, no match");
-is(rindex("Hello World", "Hello World"), 0, "Substr eq Str");
+is 'Hello World'->rindex('Hello'),       0, 'Substr, at beginning';
+is 'Hello World'->rindex('o W'),         4, 'Substr, in the middle';
+is 'Hello World'->rindex('World'),       6, 'Substr, at the end';
+is 'Hello World'->rindex('Hello World'), 0, 'Substr eq Str';
+ok !defined 'Hello World'->rindex('low'),   'Substr, no match';
 
 # Empty strings
-
-is(rindex("Hello World", ""), 11, "Substr is empty");
-is(rindex("", ""), 0, "Both strings are empty");
-ok(!defined(rindex("", "Hello")), "Only main-string is empty");
-is(rindex("Hello", "", 3), 3, "Substr is empty, pos within str");
-is(rindex("Hello", "", 5), 5, "Substr is empty, pos at end of str");
-is(rindex("Hello", "", 999), 5, "Substr is empty, pos > length of str");
+is 'Hello World'->rindex(''), 11, 'Substr is empty';
+is ''->rindex(''),             0, 'Both strings are empty';
+is 'Hello'->rindex('',   3),   3, 'Substr is empty, pos within str';
+is 'Hello'->rindex('',   5),   5, 'Substr is empty, pos at end of str';
+is 'Hello'->rindex('', 999),   5, 'Substr is empty, pos > length of str';
+ok !defined ''->rindex('Hello'),  'Only main-string is empty';
 
 # More difficult strings
+is 'abcdabcab'->rindex('abcd'), 0, 'Start-of-substr matches several times';
 
-is(rindex("abcdabcab", "abcd"), 0, "Start-of-substr matches several times");
-
-#?rakudo 3 skip 'unicode'
-is(rindex("uuúuúuùù", "úuù"), 4, "Accented chars");
-is(rindex("Ümlaut", "Ü"), 0, "Umlaut");
-
-is(rindex("what are these « » unicode characters for ?", "uni"), 19, "over unicode characters");
-
-# .rindex use
-is("Hello World".rindex("l"), 9, ".rindex on string");
-is("Hello World".rindex(''), 11, ".rindex('') on string gives string length in bytes");
+# unicode
+is 'uuúuúuùù'->rindex('úuù'),                                     4, 'Accented chars';
+is 'Ümlaut'->rindex('Ü'),                                         0, 'Umlaut';
+is 'what are these « » unicode characters for ?'->rindex('uni'), 19, 'over unicode characters';
 
 # on scalar variable
-my $s = "Hello World";
-is(rindex($s, "o"), 7, "rindex on scalar variable");
-is($s.rindex("o"), 7, ".rindex on scalar variable");
+my $s = 'Hello World';
+is $s->rindex('o'),     7, 'rindex on scalar variable';
+is $s->uc->rindex('O'), 7, 'rindex on uc';
 
-is(rindex(uc($s), "O"), 7, "rindex on uc");
-is($s.uc.rindex("O"), 7, ".uc.rindex ");
-
-# ideas for deeper chained . calls ?
-is($s.lc.ucfirst.rindex("w"), 6, ".lc.ucfirst.rindex");
+# ideas for deeper chained -> calls ?
+is $s->lc->ucfirst->rindex('w'), 6, '->lc->ucfirst->rindex';
 
 # rindex on non-strings
-ok 3459.rindex(5) == 2, 'rindex on integers';
+SKIP: {
+    skip 'int->rindex not implemented', 1;
 
-# vim: ft=perl6
+    ok 3459->rindex(5) == 2, 'rindex on integers';
+}

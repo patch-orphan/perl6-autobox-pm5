@@ -26,6 +26,13 @@ sub index {
     return $strpos == -1 ? undef : $strpos;
 }
 
+sub rindex {
+    my ($str, $substr, $pos) = @_;
+    my $strpos = defined $pos ? CORE::rindex $str, $substr, $pos :
+                                CORE::rindex $str, $substr       ;
+    return $strpos == -1 ? undef : $strpos;
+}
+
 sub trim {
     my $str = shift;
     $str =~ s{^ \s+  }{}xg;
