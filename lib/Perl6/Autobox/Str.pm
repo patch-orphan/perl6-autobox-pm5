@@ -8,10 +8,11 @@ our $VERSION = '0.01';
 
 sub chop  { my $str = shift; CORE::chop  $str; $str }
 sub chomp { my $str = shift; CORE::chomp $str; $str }
-sub lc      { CORE::lc      $_[0] }
-sub lcfirst { CORE::lcfirst $_[0] }
-sub uc      { CORE::uc      $_[0] }
-sub ucfirst { CORE::ucfirst $_[0] }
+
+sub lc      { CORE::lc      shift }
+sub lcfirst { CORE::lcfirst shift }
+sub uc      { CORE::uc      shift }
+sub ucfirst { CORE::ucfirst shift }
 
 sub capitalize {
     my $str = CORE::lc shift;
@@ -33,7 +34,7 @@ sub rindex {
     return $strpos == -1 ? undef : $strpos;
 }
 
-sub flip { CORE::reverse $_[0] }
+sub flip { scalar CORE::reverse shift }
 
 sub trim {
     my $str = shift;
