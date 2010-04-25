@@ -26,6 +26,13 @@ sub index {
     return $strpos == -1 ? undef : $strpos;
 }
 
+sub trim {
+    my $str = shift;
+    $str =~ s{^ \s+  }{}xg;
+    $str =~ s{  \s+ $}{}xg;
+    return $str;
+}
+
 1;
 
 __END__
@@ -93,6 +100,10 @@ If the substring is found, then an integer that represents the position of the
 first character of the substring is returned.  If the substring is not found,
 C<undef> is returned.  Do not evaluate as a number, because instead of
 returning -1 it will return 0 and issue a warning.
+
+=item trim
+
+Returns a copy of the string, with leading and trailing whitespace removed.
 
 =back
 
