@@ -19,6 +19,13 @@ sub capitalize {
     return $str;
 }
 
+sub index {
+    my ($str, $substr, $pos) = @_;
+    my $strpos = defined $pos ? CORE::index $str, $substr, $pos :
+                                CORE::index $str, $substr       ;
+    return $strpos == -1 ? undef : $strpos;
+}
+
 1;
 
 __END__
@@ -74,6 +81,18 @@ Performs a Unicode "titlecase" operation on the first character of the string.
 
 Has the effect of first doing an C<lc> on the entire string, then performing a
 C<s/(\w+)/ucfirst $1/eg> on it.
+
+=item index($substring)
+
+=item index($substring, $pos)
+
+C<index> searches for the first occurrence of C<$substring> in C<$string>,
+starting at C<$pos>.
+
+If the substring is found, then an integer that represents the position of the
+first character of the substring is returned.  If the substring is not found,
+C<undef> is returned.  Do not evaluate as a number, because instead of
+returning -1 it will return 0 and issue a warning.
 
 =back
 
