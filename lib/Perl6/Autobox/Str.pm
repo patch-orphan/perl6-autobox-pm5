@@ -14,6 +14,11 @@ sub chomp {
     return $str;
 }
 
+sub lc      { CORE::lc      $_[0] }
+sub lcfirst { CORE::lcfirst $_[0] }
+sub uc      { CORE::uc      $_[0] }
+sub ucfirst { CORE::ucfirst $_[0] }
+
 1;
 
 __END__
@@ -45,6 +50,25 @@ Returns string with one Char removed from the end.
 =item chomp
 
 Returns string with one newline removed from the end.
+
+=item lc
+
+Returns the input string after converting each character to its lowercase
+form, if uppercase.
+
+=item lcfirst
+
+Like C<lc>, but only affects the first character.
+
+=item uc
+
+Returns the input string after converting each character to its uppercase
+form, if lowercase. This is not a Unicode "titlecase" operation, but a
+full "uppercase".
+
+=item ucfirst
+
+Performs a Unicode "titlecase" operation on the first character of the string.
 
 =back
 

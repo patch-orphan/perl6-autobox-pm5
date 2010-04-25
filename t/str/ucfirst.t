@@ -1,16 +1,12 @@
-use v6;
-
-use Test;
-
-plan 5;
+use strict;
+use warnings;
+use utf8;
+use Perl6::Autobox;
+use Test::More tests => 4;
 
 # L<S32::Str/Str/ucfirst>
 
-is ucfirst("hello world"), "Hello world", "simple";
-is ucfirst(:string("station")), "Station", "ucfirst works with named argument";
-is ucfirst(""),            "",            "empty string";
-is ucfirst("üüüü"),        "Üüüü",        "umlaut";
-is ucfirst("óóóó"),        "Óóóó",        "accented chars";
-
-
-# vim: ft=perl6
+is 'hello world'->ucfirst, 'Hello world', 'simple';
+is ''->ucfirst,            '',            'empty string';
+is 'üüüü'->ucfirst,        'Üüüü',        'umlaut';
+is 'óóóó'->ucfirst,        'Óóóó',        'accented chars';
