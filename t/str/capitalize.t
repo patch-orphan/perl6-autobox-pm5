@@ -1,50 +1,39 @@
-use v6;
-
-use Test;
-
-plan 16;
+use strict;
+use warnings;
+use utf8;
+use charnames ':full';
+use Perl6::Autobox;
+use Test::More tests => 10;
 
 # L<S32::Str/Str/capitalize>
 
-is capitalize(""),             "",               "capitalize('') works";
-is capitalize("puGS Is cOOl!"), "Pugs Is Cool!", "capitalize('...') works";
-is "puGS Is cOOl!".capitalize,  "Pugs Is Cool!", "'...'.capitalize works";
+is ''->capitalize,              '',               "''->capitalize works";
+is 'puGS Is cOOl!'->capitalize, 'Pugs Is Cool!', "'...'->capitalize works";
 
-my $a = "";
-is capitalize($a),             "",               "capitalize empty string";
-$a = "puGS Is cOOl!";
-is capitalize($a),             "Pugs Is Cool!",  "capitalize string works";
-is capitalize(:string($a)),    "Pugs Is Cool!",  "capitalize string works with positional argument";
-is $a,                         "puGS Is cOOl!",  "original string not touched";
-is $a.capitalize,              "Pugs Is Cool!",  "capitalize string works";
-is $a,                         "puGS Is cOOl!",  "original string not touched";
-is "ab cD Ef".capitalize,      "Ab Cd Ef",       "works on ordinary string";
-
-
-{
-    $_ = "puGS Is cOOl!";
-    is .capitalize, "Pugs Is Cool!", 'capitalize() uses \$_ as default';
-}
+my $a = '';
+is $a->capitalize,         '',               'capitalize empty string';
+$a = 'puGS Is cOOl!';
+is $a->capitalize,         'Pugs Is Cool!',  'capitalize string works';
+is $a,                     'puGS Is cOOl!',  'original string not touched';
+is 'ab cD Ef'->capitalize, 'Ab Cd Ef',       'works on ordinary string';
 
 # Non-ASCII chars:
-is capitalize("äöü abcä"), "Äöü Abcä", "capitalize() works on non-ASCII chars";#
+is 'äöü abcä'->capitalize, 'Äöü Abcä', 'capitalize works on non-ASCII chars';
 
-#?rakudo 2 todo 'graphemes results wrong'
-is capitalize("a\c[COMBINING DIAERESIS]üö abcä"), "Äöü Abcä", 'capitalize on string with grapheme precomposed';
-is capitalize("a\c[COMBINING DOT ABOVE, COMBINING DOT BELOW] bc"),
-    "A\c[COMBINING DOT BELOW, COMBINING DOT ABOVE] Bc",
-    "capitalize on string with grapheme without precomposed";
+# graphemes results
+is(
+    "a\N{COMBINING DIAERESIS}üö abcä"->capitalize,
+    "A\N{COMBINING DIAERESIS}üö Abcä",
+    'capitalize on string with grapheme without precomposed'
+);
+is(
+    "a\N{COMBINING DOT ABOVE}\N{COMBINING DOT BELOW} bc"->capitalize,
+    "A\N{COMBINING DOT ABOVE}\N{COMBINING DOT BELOW} Bc",
+    'capitalize on string with grapheme without precomposed'
+);
     
-# rest of the tests are moved from uc.t
-is ~(0.capitalize), ~0, '.capitalize on Int';
+SKIP: {
+    skip 'int->capitalize not implemented', 1;
 
-#?rakudo todo "Roles do not behave as this test expects yet"
-{
-    role A {
-        has $.thing = 3;
-    }
-    my $str = "('Nothing much' but A).capitalize eq 'Nothing much'capitalize";
-    ok eval($str), $str;
+    is 0->capitalize, '0', 'capitalize on Int';
 }
-
-# vim: ft=perl6

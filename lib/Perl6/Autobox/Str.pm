@@ -13,6 +13,12 @@ sub lcfirst { CORE::lcfirst $_[0] }
 sub uc      { CORE::uc      $_[0] }
 sub ucfirst { CORE::ucfirst $_[0] }
 
+sub capitalize {
+    my $str = CORE::lc shift;
+    $str =~ s{ (\w+) }{ CORE::ucfirst $1 }xeg;
+    return $str;
+}
+
 1;
 
 __END__
@@ -63,6 +69,11 @@ full "uppercase".
 =item ucfirst
 
 Performs a Unicode "titlecase" operation on the first character of the string.
+
+=item capitalize
+
+Has the effect of first doing an C<lc> on the entire string, then performing a
+C<s/(\w+)/ucfirst $1/eg> on it.
 
 =back
 
