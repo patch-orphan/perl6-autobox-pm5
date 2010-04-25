@@ -6,14 +6,8 @@ use warnings;
 
 our $VERSION = '0.01';
 
-sub chop { substr $_[0], 0, -1 }
-
-sub chomp {
-    my ($str) = @_;
-    $str =~ s{ \n $}{}x;
-    return $str;
-}
-
+sub chop  { my $str = shift; CORE::chop  $str; $str }
+sub chomp { my $str = shift; CORE::chomp $str; $str }
 sub lc      { CORE::lc      $_[0] }
 sub lcfirst { CORE::lcfirst $_[0] }
 sub uc      { CORE::uc      $_[0] }
