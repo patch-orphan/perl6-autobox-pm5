@@ -34,7 +34,7 @@ sub rindex {
     return $strpos == -1 ? undef : $strpos;
 }
 
-sub flip { scalar CORE::reverse shift }
+sub flip { scalar reverse shift }
 
 sub trim {
     my $str = shift;

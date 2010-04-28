@@ -22,7 +22,7 @@ __END__
 
 =head1 NAME
 
-Perl6::Autobox - XXX
+Perl6::Autobox - Call Perl 6 inspired methods on native Perl 5 datatypes
 
 =head1 VERSION
 
@@ -32,9 +32,18 @@ This document describes Perl6::Autobox version 0.01.
 
     use Perl6::Autobox;
 
+    'foo bar baz'->comb(qr/[aeiou]+/);  # ('oo', 'a', 'a')
+
+    { a => 1, b => 2 }->fmt('%s: %d', '; ');  # "a: 1; b: 2"
+
+    [ ['a', 'b'], [1, 2] ]->crosswith('.');  # ('a1', 'a2', 'b1', 'b2')
+
 =head1 DESCRIPTION
 
-XXX
+This module provides autoboxed methods inspired by Perl 6.  The goal is to
+implement all of the core methods from the Perl 6 specification that would be
+practical in Perl 5.  The relevant portions of the Perl 6 test suite are used
+by this module with necessary modifications for Perl 5.
 
 =head1 SEE ALSO
 
