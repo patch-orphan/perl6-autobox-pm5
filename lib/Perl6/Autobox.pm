@@ -5,6 +5,7 @@ use strict;
 use warnings;
 
 require Perl6::Autobox::Str;
+require Perl6::Autobox::List;
 
 use base 'autobox';
 
@@ -13,6 +14,7 @@ our $VERSION = '0.01';
 sub import {
     shift->SUPER::import(
         STRING => 'Perl6::Autobox::Str',
+        ARRAY  => 'Perl6::Autobox::List',
     );
 }
 

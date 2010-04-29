@@ -1,31 +1,17 @@
-use v6;
+use strict;
+use warnings;
+use Test::More tests => 10;
 
-use Test;
-plan *;
+ok [[qw< a b >], [qw< c d >]]->zip,          'cross non-meta operator parses';
+ok [[qw< a b >], [qw< c d >]]->zipwith(','), 'zip metaoperator parses';
 
-ok eval('<a b> Z <c d>'), 'cross non-meta operator parses';
-
-ok <a b> Z <1 2>, <a 1 b 2>, 'non-meta zip produces expected result';
-
-is (1, 2, 3 Z** 2, 4), (1, 16), 'zip-power works';
-
-ok eval('<a b> Z, <c d>'), 'zip metaoperator parses';
-
-is (<a b> Z~ <1 2>), <a1 b2>, 'zip-concat produces expected result';
-
-is (1,2 Z* 3,4), (3,8), 'zip-product works';
-
-is (1,2 Zcmp 3,2,0), (-1, 0), 'zip-cmp works';
-
-# tests for laziness
-is (1..* Z** 1..*).batch(5), (1**1, 2**2, 3**3, 4**4, 5**5), 'zip-power with lazy lists';
-is (1..* Z+ (3, 2 ... *)).batch(5), (1+3, 2+2, 3+1, 4+0, 5-1), 'zip-plus with lazy lists';
+is_deeply [[qw< a b >], [qw< 1 2 >]]->zip,          [qw< a 1 b 2 >], 'non-meta zip produces expected result';
+is_deeply [[1, 2, 3], [2, 4]]->zipwith('**'),       [1, 16],         'zip-power works';
+is_deeply [[qw< a b >], [qw< 1 2 >]]->zipwith('.'), [qw< a1 b2 >],   'zip-concat produces expected result';
+is_deeply [[1, 2], [3, 4]]->zipwith('*'),           [3, 8],          'zip-product works';
+is_deeply [[1, 2], [3, 2, 0]]->zipwith('<=>'),      [-1, 0],         'zip-spaceship works';
 
 # tests for non-list arguments
-is (1 Z* 3,4), (3), 'zip-product works with scalar left side';
-is (1, 2 Z* 3), (3), 'zip-product works with scalar right side';
-is (1 Z* 3), (3), 'zip-product works with scalar both sides';
-
-done_testing;
-
-# vim: ft=perl6
+is_deeply [1, [3, 4]]->zipwith('*'), [3], 'zip-product works with scalar left side';
+is_deeply [[1, 2], 3]->zipwith('*'), [3], 'zip-product works with scalar right side';
+is_deeply [1, 3]->zipwith('*'),      [3], 'zip-product works with scalar both sides';
