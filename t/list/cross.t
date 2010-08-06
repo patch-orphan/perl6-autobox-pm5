@@ -1,31 +1,29 @@
-use v6;
-
-use Test;
-plan 26;
+use strict;
+use warnings;
+use Test::More;
 
 # L<S03/List infix precedence/the cross operator>
-ok eval('<a b> X <c d>'), 'cross non-meta operator parses';
 
 {
-    my @result = <a b> X <1 2>;
-    is @result, <a 1 a 2 b 1 b 2>,
-    'non-meta cross produces expected result';
-
+    my @result = [[qw< a b >], [qw< 1 2 >]]->cross;
+    is_deeply \@result, [qw< a 1 a 2 b 1 b 2 >], 'non-meta cross produces expected result';
 }
 
-is (1, 2, 3 X** 2, 4), (1, 1, 4, 16, 9, 81), 'X** works';
+is_deeply [[1, 2, 3], [2, 4]]->crosswith('**'), [1, 1, 4, 16, 9, 81], 'X** works';
 
-is ([+] 1, 2, 3 X** 2, 4), (1+1 + 4+16 + 9+81), '[+] and X** work';
+{
+    use List::Util qw( sum );
+    is sum [[1, 2, 3], [2, 4]]->crosswith('**'), (1+1 + 4+16 + 9+81), 'sum of X** works';
+}
 
 # L<S03/List infix precedence/This becomes a flat list in>
-#?rakudo todo "Array/list/iterator issues"
 {
-    my @result = gather {
-        for @(1..3 X 'a'..'b') -> $n, $a {
-            take "$n|$a"
-        }
+    use List::MoreUtils qw( natatime );
+    my $cross = natatime 2, [[1..3], ['a'..'b']]->cross;
+    while (my ($n, $a) = $cross->() ) {
+        push @result, "$n|$a";
     }
-    is @result, <1|a 1|b 2|a 2|b 3|a 3|b>, 'smooth cross operator works';
+    is_deeply \@result, [qw< 1|a 1|b 2|a 2|b 3|a 3|b >], 'smooth cross operator works';
 }
 
 # L<S03/List infix precedence/and a list of arrays in>
@@ -57,10 +55,9 @@ ok eval('<a b> X, <c d>'), 'cross metaoperator parses';
 }
 
 # L<S03/Cross operators/list concatenating form when used like this>
-#?rakudo skip 'chained cross NYI'
 {
-    my @result = <a b> X, 1,2 X, <x y>;
-    is @result.elems, 24, 'chained cross-comma produces correct number of elements';
+    my @result = [[[qw< a b >], [1, 2]]->crosswith(','), [qw< x y >]]->crosswith(',');
+    is scalar @result, 24, 'chained cross-comma produces correct number of elements';
 
     my @expected = (
         ['a', 1, 'x'],
@@ -72,13 +69,12 @@ ok eval('<a b> X, <c d>'), 'cross metaoperator parses';
         ['b', 2, 'x'],
         ['b', 2, 'y'],
     );
-    is @result, @expected, 'chained cross-comma produces correct results';
+    is_deeply \@result, \@expected, 'chained cross-comma produces correct results';
 }
 
 # L<S03/Cross operators/any existing non-mutating infix operator>
-is (1,2 X* 3,4), (3,4,6,8), 'cross-product works';
-
-is (1,2 Xcmp 3,2,0), (-1, -1, 1, -1, 0, 1), 'Xcmp works';
+is_deeply [[1, 2], [3, 4]   ]->crosswith('*'),   [3, 4, 6, 8],          'cross-product works';
+is_deeply [[1, 2], [3, 2, 0]]->crosswith('<=>'), [-1, -1, 1, -1, 0, 1], 'cross-spaceship works';
 
 # L<S03/Cross operators/underlying operator non-associating>
 eval_dies_ok '@result Xcmp @expected Xcmp <1 2>',
@@ -107,8 +103,6 @@ eval_dies_ok '@result Xcmp @expected Xcmp <1 2>',
 }
 
 # tests for non-list arguments
-is (1 X* 3,4), (3, 4), 'cross-product works with scalar left side';
-is (1, 2 X* 3), (3, 6), 'cross-product works with scalar right side';
-is (1 X* 3), (3), 'cross-product works with scalar both sides';
-
-# vim: ft=perl6
+is_deeply [1, [3, 4]]->crosswith('*'), [3, 4], 'cross-product works with scalar left side';
+is_deeply [[1, 2], 3]->crosswith('*'), [3, 6], 'cross-product works with scalar right side';
+is_deeply [1,      3]->crosswith('*'), [3],    'cross-product works with scalar both sides';
